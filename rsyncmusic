@@ -1,0 +1,2 @@
+#!/bin/bash
+rsync -avh ~/Music/16gb\ car\ usb\ drive/ /media/sheershoff/SHEER16GB/ --delete

@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# gist with this script is here: https://gist.github.com/sheershoff/a1e068b3f6ed60ed87f56a9e5dce312b
+
+# Build or use cached image and tag with "local/local/ubuntu_pdftk", suppress output
+# to maintain compatibility in case you are parsing the pdftk output.
+# It will build the image if it's absent or use the cached one.
+echo "FROM ubuntu:16.04
+RUN apt-get update && \
+    apt-get install -y pdftk && \
+    rm -rf /var/lib/apt/lists/*" | docker build -t local/local/ubuntu_pdftk - 2>&1 > /dev/null
+
+# Run the pdftk
+set -eu
+docker run --name pdftk -it --rm --user $(id -u):$(id -g) -v "$PWD:/workdir$PWD" -w "/workdir$PWD" local/local/ubuntu_pdftk pdftk "$@"
