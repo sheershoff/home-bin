@@ -1,2 +1,16 @@
 #!/bin/bash
-rsync -avh ~/Music/16gb\ car\ usb\ drive/ /media/sheershoff/SHEER16GB/ --delete
+USB="/media/sheershoff/SHEER16GB"
+echo $USB
+if mount | grep ${USB} > /dev/null; then
+    echo "Found $USB, remounting and starting syncing..."
+# FAT32 specific stuff
+    sudo mount --options=remount,iocharset=utf8,shortname=mixed $USB
+    rsync -rtv --modify-window=2 ~/Music/16gb\ car\ usb\ drive/ $USB/ --delete
+fi
+USB="/media/sheershoff/SHEER16LECT"
+if mount | grep ${USB} > /dev/null; then
+    echo "Found $USB, remounting and starting syncing..."
+# FAT32 specific stuff
+    sudo mount --options=remount,iocharset=utf8,shortname=mixed $USB
+    rsync -rtv  --modify-window=2 ~/Music/16gb_lectures/ $USB/ --delete
+fi
