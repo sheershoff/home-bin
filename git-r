@@ -1,0 +1,20 @@
+#!/bin/bash
+usage="Execute a command in each immediate child directory that has .git folder in it.\n\n   Usage:\n\n        $(basename "$0") [-h|--help] - this message\n        $(basename "$0") git status - executes 'git status' in each directory\n        $(basename "$0") 'ls * - lisah' - use brackets to supress globbing\n\n"
+case "$1" in
+  -h|--help) printf "$usage"
+     exit
+     ;;
+esac
+
+NC='\033[0m' # No Color
+GREEN='\033[0;32m'
+
+set -e
+GIT_DIRS=$(find . -maxdepth 2 -type d -name .git| xargs -I {} dirname {})
+for DIR in $GIT_DIRS; do
+  echo -e "${GREEN}### ->" $DIR"${NC}"
+  pushd $DIR > /dev/null
+  echo "$($*)"
+  popd > /dev/null
+  echo ""
+done
